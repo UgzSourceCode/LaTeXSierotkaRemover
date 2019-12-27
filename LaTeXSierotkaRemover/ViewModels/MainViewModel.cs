@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace LaTeXSierotkaRemover.ViewModels
@@ -12,7 +14,7 @@ namespace LaTeXSierotkaRemover.ViewModels
     public class MainViewModel : ViewModelBase
     {
         #region Fields
-
+        private static readonly string[] prefixes = { "~", " ", Environment.NewLine, "\r\n" };
         #endregion
 
         #region Properties
@@ -29,6 +31,14 @@ namespace LaTeXSierotkaRemover.ViewModels
             get { return _sierotkiBaseAddress; }
             set { Set(ref _sierotkiBaseAddress, value); }
         }
+
+        private string _documentAddress;
+        public string DocumentAddress
+        {
+            get { return _documentAddress; }
+            set { Set(ref _documentAddress, value); }
+        }
+
 
         private bool _isVisibleLoadingLockGrid;
         public bool IsVisibleLoadingLockGrid
@@ -77,6 +87,7 @@ namespace LaTeXSierotkaRemover.ViewModels
         private void InitializeVariables()
         {
             this.SierotkiBaseAddress = "./base.txt";
+            this.DocumentAddress = "./index.tex";
         }
 
         private void LoadSierotkiBase()
@@ -95,7 +106,54 @@ namespace LaTeXSierotkaRemover.ViewModels
 
         private void RemoveSierotki()
         {
+            try
+            {
+                this.IsVisibleLoadingLockGrid = true;
+                string document = File.ReadAllText(this.DocumentAddress);
+                foreach (var sierotka in SierotkiList)
+                {
+                    document = this.ReplaceDocument(document, sierotka.ToString().Trim());
+                }
+                File.WriteAllText(this.DocumentAddress, document);
+            }
+            catch (FileNotFoundException FNFex)
+            {
+                MessageBox.Show(FNFex.Message, "File Not Found");
+            }
+            finally
+            {
+                this.IsVisibleLoadingLockGrid = false;
+            }
+        }
 
+        private string ReplaceDocument(string document, string sierotka)
+        {
+            string result = document;
+            foreach (string prefix in prefixes)
+            {
+                foreach (string variantOfSierotka in GetVariantsSierotka(sierotka))
+                {
+                    result = result.Replace(prefix + variantOfSierotka + " ", prefix + variantOfSierotka + "~");
+                }
+            }
+
+            return result;
+        }
+
+        private List<string> GetVariantsSierotka(string sierotka)
+        {
+            List<string> result = new List<string>();
+            if (sierotka.Length >= 2)
+            {
+                result.Add(char.ToUpper(sierotka[0]) + sierotka.Substring(1));
+            }
+            result.Add(sierotka);
+            result.Add(sierotka.ToUpper());
+            result.Add(sierotka.ToLower());
+
+            result = result.Distinct().ToList();
+
+            return result;
         }
         #endregion
     }
