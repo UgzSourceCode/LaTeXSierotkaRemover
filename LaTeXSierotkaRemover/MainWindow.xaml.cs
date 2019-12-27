@@ -30,16 +30,7 @@ namespace LaTeXSierotkaRemover
 
         private void ReadFileButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                LoadingLockGrid.Visibility = Visibility.Visible;
-                var output = File.ReadAllLines(UrlBaseTextBox.Text);
-                SierotkiView.ItemsSource = output;
-            }
-            finally
-            {
-                LoadingLockGrid.Visibility = Visibility.Collapsed;
-            }
+            
         }
 
         private void DoThis_Click(object sender, RoutedEventArgs e)
