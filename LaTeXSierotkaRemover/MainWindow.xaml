@@ -4,8 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LaTeXSierotkaRemover"
+        xmlns:vm="clr-namespace:LaTeXSierotkaRemover.ViewModels"
+        xmlns:conv="clr-namespace:LaTeXSierotkaRemover.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    
+    <Window.DataContext>
+        <vm:MainViewModel x:Name="ViewModel" />
+    </Window.DataContext>
+    
+    <Window.Resources>
+        <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
+    
     <Grid>
         <StackPanel>
             <Grid>
@@ -14,21 +25,21 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Content="'Sierotki' base: " />
-                <TextBox x:Uid="UrlBaseTextBox" x:Name="UrlBaseTextBox" Grid.Column="1" Text="./base.txt" Margin="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                <TextBox x:Uid="UrlBaseTextBox" x:Name="UrlBaseTextBox" Grid.Column="1" Text="{Binding SierotkiBaseAddress, Mode=TwoWay}" Margin="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
             </Grid>
-            <Button x:Uid="ReadFileButton" x:Name="ReadFileButton" Content="Read file" Click="ReadFileButton_Click" />
-            <ListView x:Uid="SierotkiView" MaxHeight="250" x:Name="SierotkiView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Button x:Uid="ReadFileButton" x:Name="ReadFileButton" Content="Read file" Command="{Binding ReadBaseCommand}" />
+            <ListView x:Uid="SierotkiView" MaxHeight="250" x:Name="SierotkiView" ItemsSource="{Binding SierotkiList, Mode=TwoWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Content="'Sierotki' base: " />
-                <TextBox x:Uid="UrlBaseTextBox" x:Name="UrlLatexTextBox" Grid.Column="1" Text="./index.tex" Margin="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                <TextBox x:Uid="UrlBaseTextBox" x:Name="UrlLatexTextBox" Grid.Column="1" Text="{Binding DocumentAddress, Mode=TwoWay}" Margin="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
             </Grid>
-            <Button x:Uid="DoThis" x:Name="DoThis" Content="Remove 'Sierotki'" Click="DoThis_Click" />
+            <Button x:Uid="DoThis" x:Name="DoThis" Content="Remove 'Sierotki'" Command="{Binding RemoveSierotkiCommand}" />
         </StackPanel>
-        <Grid x:Uid="LoadingLockGrid" Visibility="Collapsed" x:Name="LoadingLockGrid" Background="#99555555">
+        <Grid x:Uid="LoadingLockGrid" Visibility="{Binding IsVisibleLoadingLockGrid, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" x:Name="LoadingLockGrid" Background="#99555555">
             <TextBlock Text="PLEASE WAIT..." HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
