@@ -1,0 +1,35 @@
+﻿<Window x:Class="LaTeXSierotkaRemover.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LaTeXSierotkaRemover"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="'Sierotki' base: " />
+                <TextBox x:Uid="UrlBaseTextBox" x:Name="UrlBaseTextBox" Grid.Column="1" Text="./base.txt" Margin="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+            </Grid>
+            <Button x:Uid="ReadFileButton" x:Name="ReadFileButton" Content="Read file" Click="ReadFileButton_Click" />
+            <ListView x:Uid="SierotkiView" MaxHeight="250" x:Name="SierotkiView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="'Sierotki' base: " />
+                <TextBox x:Uid="UrlBaseTextBox" x:Name="UrlLatexTextBox" Grid.Column="1" Text="./index.tex" Margin="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+            </Grid>
+            <Button x:Uid="DoThis" x:Name="DoThis" Content="Remove 'Sierotki'" Click="DoThis_Click" />
+        </StackPanel>
+        <Grid x:Uid="LoadingLockGrid" Visibility="Collapsed" x:Name="LoadingLockGrid" Background="#99555555">
+            <TextBlock Text="PLEASE WAIT..." HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>
